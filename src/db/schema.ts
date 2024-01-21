@@ -1,40 +1,30 @@
 // schema.js
-import { mysqlTable, bigint, varchar } from "drizzle-orm/mysql-core";
+import { mysqlTable, bigint, varchar, datetime } from "drizzle-orm/mysql-core";
 
-export const userSchema = mysqlTable("users", {
+export const userTable = mysqlTable("users", {
 	id: varchar("id", {
-		length: 15 // change this when using custom user ids
-	}).primaryKey()
-	// other user attributes
-});
-
-export const keySchema = mysqlTable("keys", {
-	id: varchar("id", {
-		length: 255
+		length: 255 // change this when using custom user ids
 	}).primaryKey(),
-	userId: varchar("user_id", {
-		length: 15
-	})
-		.notNull()
-		.references(() => userSchema.id),
+	username: varchar("username", {
+		length: 255
+	}),
+	email: varchar("email", {
+		length: 255
+	}),
 	hashedPassword: varchar("hashed_password", {
 		length: 255
 	})
 });
 
-export const sessionSchema = mysqlTable("sessions", {
+
+export const sessionTable = mysqlTable("session", {
 	id: varchar("id", {
-		length: 128
+		length: 255
 	}).primaryKey(),
 	userId: varchar("user_id", {
-		length: 15
+		length: 255
 	})
 		.notNull()
-		.references(() => userSchema.id),
-	activeExpires: bigint("active_expires", {
-		mode: "number"
-	}).notNull(),
-	idleExpires: bigint("idle_expires", {
-		mode: "number"
-	}).notNull()
+		.references(() => userTable.id),
+	expiresAt: datetime("expires_at").notNull()
 });

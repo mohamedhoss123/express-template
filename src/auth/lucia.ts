@@ -1,16 +1,25 @@
 // lucia.ts
-import { lucia } from "lucia";
-import { mysql2 } from "@lucia-auth/adapter-mysql";
+import { Lucia } from "lucia";
 
-import { connection } from "../db/index.js";
-import { express } from "lucia/middleware";
+import { db } from "../db/index.js";
+import { DrizzleMySQLAdapter } from "@lucia-auth/adapter-drizzle";
+import { sessionTable,userTable } from "db/schema.js";
 
-export const auth = lucia({
-    middleware: express(),
-    adapter: mysql2(connection, {
-        key: "users",
-        user: "keys",
-        session: "sessions"
-    }),
-    env: "DEV"
+const adapter = new DrizzleMySQLAdapter(db, sessionTable, userTable);
+
+export const auth = new Lucia(adapter, {
+	sessionCookie: {
+		attributes: {
+			// set to `true` when using HTTPS
+			secure: process.env.NODE_ENV === "production"
+		}
+	}
 });
+
+
+// IMPORTANT!
+// declare module "lucia" {
+// 	interface Register {
+// 		Lucia: typeof lucia;
+// 	}
+// }

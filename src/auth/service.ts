@@ -1,18 +1,21 @@
-import { getDbConnection } from "../db/index.js";
-import { userSchema } from "../db/schema.js";
-import { eq } from "drizzle-orm";
+import { db } from "../db/index.js";
+import { sessionTable, userTable } from "../db/schema.js";
+
+import { TCreateUser } from "./dto/create-user.js";
+import { Argon2id } from "oslo/password";
+import { ulid } from 'ulid'
+import { auth } from "./lucia.js";
+import { uuid } from "drizzle-orm/pg-core";
+
 
 export class AuthService {
 
-    private static db = getDbConnection()
-
-    public static async getUserById(id: number) {
-        return (await this.db).select().from(userSchema)
+    public static async createUser(paylod: TCreateUser) {
+        let { password, ...body } = paylod
+        const hashedPassword = await new Argon2id().hash(password)
+        return db.insert(userTable).values({ id: ulid(), hashedPassword, ...body })
     }
-    public static async getAllUsers() {
-        return (await this.db).select().from(userSchema)
-    }
-    public static async createUser() {
-        return (await this.db).insert(userSchema)
+    public static craeteSession(userid: string) {
+        return auth.createSession(userid, {}, { sessionId: ulid() })
     }
 }

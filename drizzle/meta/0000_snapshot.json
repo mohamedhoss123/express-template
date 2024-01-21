@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "74886195-7c55-49a8-947c-b18df9c83df3",
+  "id": "9c31c984-51a7-4d83-9b33-2b44ffbdc80e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "keys": {
-      "name": "keys",
+    "session": {
+      "name": "session",
       "columns": {
         "id": {
           "name": "id",
@@ -16,24 +16,24 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(15)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "hashed_password": {
-          "name": "hashed_password",
-          "type": "varchar(255)",
+        "expires_at": {
+          "name": "expires_at",
+          "type": "datetime",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "keys_user_id_users_id_fk": {
-          "name": "keys_user_id_users_id_fk",
-          "tableFrom": "keys",
+        "session_user_id_users_id_fk": {
+          "name": "session_user_id_users_id_fk",
+          "tableFrom": "session",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -46,66 +46,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "keys_id": {
-          "name": "keys_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sessions": {
-      "name": "sessions",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(15)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "active_expires": {
-          "name": "active_expires",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "idle_expires": {
-          "name": "idle_expires",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "sessions_user_id_users_id_fk": {
-          "name": "sessions_user_id_users_id_fk",
-          "tableFrom": "sessions",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "sessions_id": {
-          "name": "sessions_id",
+        "session_id": {
+          "name": "session_id",
           "columns": [
             "id"
           ]
@@ -118,9 +60,30 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(15)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "hashed_password": {
+          "name": "hashed_password",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },

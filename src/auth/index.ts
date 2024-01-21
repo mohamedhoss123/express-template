@@ -1,13 +1,23 @@
-import { getDbConnection } from "db/index.js";
-import { userSchema } from "db/schema.js";
-import { Body, Controller, Get, Post, QueryParams } from "routing-controllers";
+import { db } from "db/index.js";
+import { Body, Controller, Get, Post, QueryParams, Req, Res, UseBefore } from "routing-controllers";
 
-@Controller("/auth", {transformRequest: false, transformResponse: false})
-export default class {
-    @Get()
-    async test(){
-        let db = await getDbConnection()
-        console.log(await db.select().from(userSchema));
-        return "hellow form auth"
+import { CreateUser, TCreateUser } from "./dto/create-user.js";
+import { ValidationFactory } from "helpers/zodFactory.js";
+import { AuthService } from "./service.js";
+import { TLoginUser } from "./dto/login-user.js";
+import { Response } from "express";
+
+@Controller("/auth", { transformRequest: false, transformResponse: false })
+export default class AuthController {
+    @Post("/login")
+    async login(@Body() body: TLoginUser,@Res()res:Response,@Req()req:Request) {
+        
+    }
+
+    @UseBefore(ValidationFactory(CreateUser))
+    @Post("/register")
+    async register(@Body() body: TCreateUser) {
+        await AuthService.createUser(body) as any;
+        return "ok"
     }
 }

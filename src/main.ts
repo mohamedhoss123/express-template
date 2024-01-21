@@ -1,17 +1,18 @@
-import auth from 'auth/index.js';
-import { getDbConnection } from 'db/index.js';
 import express from 'express'
-import {useExpressServer} from 'routing-controllers';
+import "reflect-metadata"
+import {  useExpressServer } from 'routing-controllers';
+import AuthController from 'auth/index.js';
+
 const app = express()
 const port = 3000
 
 
-useExpressServer(app,{
-    controllers:[auth]
+app.use(express.json())
+useExpressServer(app, {
+    controllers: [AuthController]
 })
 
 async function bootstrap() {
-    await getDbConnection()
     app.listen(port, () => {
         console.log(`localhost:${port}`)
     })

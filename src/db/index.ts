@@ -2,16 +2,8 @@ import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import { WinstonLogger } from "./logger.js";
 import { config } from "dotenv";
+import { getEnv } from "helpers/env.js";
 config()
-export let connection: mysql.Connection;
-
-async function getDbConnection() {
-    if (!connection) {
-        connection = await mysql.createConnection(process.env["DATABASE_URL"] as string);
-    }
-
-    return drizzle(connection,{logger:new WinstonLogger()});
-}
-
-export { getDbConnection };
+export let connection= mysql.createPool(getEnv("DATABASE_URL") as string);;
+export const db = drizzle(connection, { logger: new WinstonLogger() });
 
