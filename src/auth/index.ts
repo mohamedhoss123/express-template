@@ -3,15 +3,16 @@ import { Body, Controller, Get, Post, QueryParams, Req, Res, UseBefore } from "r
 
 import { CreateUser, TCreateUser } from "./dto/create-user.js";
 import { ValidationFactory } from "helpers/zodFactory.js";
-import { AuthService } from "./service.js";
+
 import { TLoginUser } from "./dto/login-user.js";
 import { Response } from "express";
+import AuthService from "./service.js";
 
 @Controller("/auth", { transformRequest: false, transformResponse: false })
 export default class AuthController {
     @Post("/login")
-    async login(@Body() body: TLoginUser,@Res()res:Response,@Req()req:Request) {
-        
+    async login(@Body() body: TLoginUser, @Res() res: Response, @Req() req: Request) {
+
     }
 
     @UseBefore(ValidationFactory(CreateUser))
