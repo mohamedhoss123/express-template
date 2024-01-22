@@ -1,9 +1,9 @@
 // schema.js
-import { mysqlTable, bigint, varchar, datetime } from "drizzle-orm/mysql-core";
+import { mysqlTable, varchar, datetime } from "drizzle-orm/mysql-core";
 
 export const userTable = mysqlTable("users", {
 	id: varchar("id", {
-		length: 255 // change this when using custom user ids
+		length: 255 
 	}).primaryKey(),
 	username: varchar("username", {
 		length: 255
@@ -15,6 +15,7 @@ export const userTable = mysqlTable("users", {
 		length: 255
 	})
 });
+export type SelectUser = typeof userTable.$inferSelect;
 
 
 export const sessionTable = mysqlTable("session", {
