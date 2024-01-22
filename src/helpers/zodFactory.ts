@@ -10,7 +10,7 @@ export function ValidationFactory(ZodSchema:ZodSchema<any>){
                 .safeParse(req.body);
     
             if (!result.success) {
-                res.send(result.error.issues);
+                res.send(result.error.flatten());
                 return
             }
             next();

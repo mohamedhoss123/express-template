@@ -11,14 +11,15 @@ import AuthService from "./service.js";
 @Controller("/auth", { transformRequest: false, transformResponse: false })
 export default class AuthController {
     @Post("/login")
-    async login(@Body() body: TLoginUser, @Res() res: Response, @Req() req: Request) {
+    async login(@Body() body: TLoginUser, @Res() res: Response) {
+
 
     }
 
     @UseBefore(ValidationFactory(CreateUser))
     @Post("/register")
     async register(@Body() body: TCreateUser) {
-        await AuthService.createUser(body) as any;
+        await AuthService.createUser(body);
         return "ok"
     }
 }
