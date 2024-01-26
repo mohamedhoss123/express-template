@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, Post, Req, Res, UseBefore } from "rout
 import { CreateUser, TCreateUser } from "./dto/create-user.js";
 import { ValidationFactory } from "../helpers/zodFactory.js";
 import { LoginUser, TLoginUser } from "./dto/login-user.js";
-import { Response,Request } from "express";
+import { Response, Request } from "express";
 import AuthService from "./service.js";
 import { Argon2id } from "oslo/password";
 import { serializeCookie } from "oslo/cookie";
@@ -15,8 +15,8 @@ export default class AuthController {
     @UseBefore(ValidationFactory(LoginUser))
     async login(@Body() body: TLoginUser, @Res() res: Response) {
         const user = (await AuthService.getUserByEmail(body.email))[0]
-        const vali = await (new Argon2id().verify(user.hashedPassword || "", body.password))
-        if (vali) {
+        const isValidePass = await (new Argon2id().verify(user.hashedPassword || "", body.password))
+        if (isValidePass) {
             const session = await AuthService.craeteSession(user.id)
             res.setHeader("Set-Cookie", serializeCookie("sid", session.id, {
                 httpOnly: true,
@@ -34,19 +34,15 @@ export default class AuthController {
     @Get("/validate")
     async validate(@Req() req: Request, @Res() res: Response) {
         const sessionCookie = req.cookies["sid"]
-        res.status(401)
-        if (sessionCookie) {
-            console.log(await auth.validateSession(sessionCookie));
-            res.status(await auth.validateSession(sessionCookie) ? 200 : 401)
-        }
+        res.status(sessionCookie && (await auth.validateSession(sessionCookie)).session ? 200 : 401)
         return ""
-
     }
+
     @UseBefore(ValidationFactory(CreateUser))
     @Post("/register")
     @HttpCode(201)
     async register(@Body() body: TCreateUser) {
-        await AuthService.createUser(body) as any;
+        await AuthService.createUser(body);
         return "ok"
     }
 }

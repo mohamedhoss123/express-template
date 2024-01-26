@@ -12,4 +12,4 @@ then wrote `pnpm install`
 
 
 ## run the projct
-use the command `npm run dev` to run the project .
+use the command `pnpm run dev` to run the project .
