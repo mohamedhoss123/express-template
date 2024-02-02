@@ -15,18 +15,26 @@ export default class AuthController {
     @UseBefore(ValidationFactory(LoginUser))
     async login(@Body() body: TLoginUser, @Res() res: Response) {
         const user = (await AuthService.getUserByEmail(body.email))[0]
-        const isValidePass = await (new Argon2id().verify(user.hashedPassword || "", body.password))
-        if (isValidePass) {
-            const session = await AuthService.craeteSession(user.id)
-            res.setHeader("Set-Cookie", serializeCookie("sid", session.id, {
-                httpOnly: true,
-                maxAge: 3600 * 24 * 30,
-                sameSite: 'lax',
-                expires: new Date(),
-            }))
-            res.status(200)
-            return "ok"
+        if (user) {
+            const isValidePass = await (new Argon2id().verify(user.hashedPassword || "", body.password))
+            if (isValidePass) {
+                const session = await AuthService.craeteSession(user.id)
+                res.setHeader("Set-Cookie", serializeCookie("sid", session.id, {
+                    httpOnly: true,
+                    maxAge: 3600 * 24 * 30,
+                    sameSite: 'lax',
+                    expires: new Date(),
+                }))
+                res.status(200)
+                return "ok"
+            }
+            res.status(400)
+            return "Bad Request"
         }
+        res.status(400)
+        return "Bad Request"
+
+
         res.status(400)
         return "Bad Request"
     }
