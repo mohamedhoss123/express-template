@@ -14,6 +14,9 @@ then wrote `pnpm install`
 use the command `pnpm run dev` to run the project .
 
 ## Controllars
+```
+important : controllers must prefix with *.controller.ts 
+```
 controller are auto loaded by the `loadControllers` helper and invoked in `main.ts` file be aware that this aprouch won't make tsx auto reload so you can manually reload it by pressing `enter` key on the keyboard , you don't need to restart the command just press `enter` on the watch terminal session
 
 ## Helpers
