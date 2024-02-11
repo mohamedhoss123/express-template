@@ -17,9 +17,9 @@ export const auth = new Lucia(adapter, {
 });
 
 
-// IMPORTANT!
-// declare module "lucia" {
-// 	interface Register {
-// 		Lucia: typeof lucia;
-// 	}
-// }
+
+declare module "lucia" {
+	interface Register {
+		Lucia: typeof auth;
+	}
+}

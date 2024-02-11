@@ -1,15 +1,13 @@
 import { Express } from "express";
 import { useExpressServer } from 'routing-controllers';
 import { glob} from 'glob'
-
 export default async function loadRoutes(app: Express) {
-    const controllers = await glob('**/*controller.{ts,js}', { ignore: 'node_modules/**' });
-    for (let i = 0; i < controllers.length; i++) {
-        const m = "../../" + controllers[i].replace("ts", "js").replaceAll("\\", "/")
-        controllers[i] = (await import(m)).default
-    }
+    const controllersPaths = await glob('**/*controller.{ts,js}', { ignore: 'node_modules/**' });
+    const controllers = await Promise.all(controllersPaths.map(async (controllerPath) => {
+        return (await import( "../../" +controllerPath.replace("ts", "js").replaceAll("\\", "/"))).default;
+    }));
     useExpressServer(app, {
-        controllers: [...controllers]
+        controllers: controllers
     })
 }
 
